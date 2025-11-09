@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hockey Rank Predictor</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .container { max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #ccc; border-radius: 8px; }
+        h1 { text-align: center; color: #0056b3; }
+        label { display: block; margin-bottom: 5px; font-weight: bold; }
+        input[type="text"], select { width: 100%; padding: 8px; margin-bottom: 10px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box; }
+        button { background-color: #007bff; color: white; padding: 10px 15px; border: none; border-radius: 4px; cursor: pointer; width: 100%; }
+        button:hover { background-color: #0056b3; }
+        .result-box { margin-top: 20px; padding: 15px; border: 2px solid #28a745; border-radius: 6px; background-color: #e2f0e6; }
+        .error-box { margin-top: 20px; padding: 15px; border: 2px solid #dc3545; border-radius: 6px; background-color: #f8d7da; color: #dc3545; }
+        .rank { font-size: 2em; font-weight: bold; color: #28a745; text-align: center; margin-top: 10px; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>🏒 Forecast club's rank</h1>
+    <p>Input your data</p>
+
+    <form method="POST">
+        <label for="club">Club:</label>
+        <select name="club" required>
+            {% for c in clubs %}
+                <option value="{{ c }}" {% if c == input.club %}selected{% endif %}>{{ c }}</option>
+            {% endfor %}
+        </select><br><br>
+
+        <label for="goal_scored">Goal scored:</label>
+        <input type="text" name="goal_scored" value="{{ input.goal_scored }}" required><br><br>
+
+        <label for="goal_missed">Goal missed:</label>
+        <input type="text" name="goal_missed" value="{{ input.goal_missed }}" required><br><br>
+
+        <button type="submit">Predict</button>
+    </form>
+
+    {% if result %}
+        {% if result.error %}
+            <div class="error-box">
+                <h4>Error!</h4>
+                <p>{{ result.error }}</p>
+            </div>
+        {% else %}
+            <div class="result-box">
+                <h4>Result:</h4>
+                <p>If a club <b>{{ result.club }}</b> scores <b>{{ result.goal_scored }}</b> and allows <b>{{ result.goal_missed }}</b> goals in this hypothetical match (relative to its average profile), its final rank (place) in the tournament would be approximately:</p>
+                <div class="rank">{{ result.rank }} rank</div>
+            </div>
+        {% endif %}
+    {% endif %}
+</div>
+
+</body>
+</html>
